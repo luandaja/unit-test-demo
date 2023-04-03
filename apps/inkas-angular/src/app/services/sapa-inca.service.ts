@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, retry } from 'rxjs';
-import { SapaInca } from '../models/SapaInca.type';
+import { SapaInca } from '@app/models';
 
 @Injectable({
   providedIn: 'root',

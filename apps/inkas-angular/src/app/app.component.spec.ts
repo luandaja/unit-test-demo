@@ -1,27 +1,48 @@
-import { TestBed } from "@angular/core/testing";
-import { AppComponent } from "./app.component";
-import { NxWelcomeComponent } from "./nx-welcome.component";
-import { RouterTestingModule } from "@angular/router/testing";
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { AppComponent } from './app.component';
+import { RouterTestingModule } from '@angular/router/testing';
+import { appRoutes } from './app.routes';
+import { Router } from '@angular/router';
+import { Location } from '@angular/common';
+import { Component } from '@angular/core';
 
-describe("AppComponent", () => {
+@Component({ selector: 'app-mock-component' })
+class MockComponent {}
+
+describe('AppComponent', () => {
+  let location: Location;
+  let router: Router;
+
+  let fixture: ComponentFixture<AppComponent>;
+  const mockedRoutes = appRoutes.map((route) => ({
+    ...route,
+    component: route.component !== undefined ? MockComponent : undefined,
+  }));
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AppComponent, NxWelcomeComponent, RouterTestingModule],
+      imports: [AppComponent, RouterTestingModule.withRoutes(mockedRoutes)],
     }).compileComponents();
+    router = TestBed.inject(Router);
+    location = TestBed.inject(Location);
+    fixture = TestBed.createComponent(AppComponent);
+
+    router.initialNavigation();
   });
 
-  it("should render title", () => {
-    const fixture = TestBed.createComponent(AppComponent);
+  it('Given a blank path When load page Then redirect to /inkas', () => {
+    router.navigate(['/']);
+    expect(location.path()).toBe('/inkas');
+  });
+
+  it('Given /inkas path When load page Then render AllInkasPage', () => {
+    router.navigate(['/inkas']);
+
     fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector("h1")?.textContent).toContain(
-      "Welcome inkas-angular"
-    );
-  });
 
-  it(`should have as title 'inkas-angular'`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual("inkas-angular");
+    const hmtlElement = fixture.nativeElement as HTMLElement;
+
+    expect(
+      hmtlElement.getElementsByTagName('app-mock-component')
+    ).not.toBeUndefined();
   });
 });

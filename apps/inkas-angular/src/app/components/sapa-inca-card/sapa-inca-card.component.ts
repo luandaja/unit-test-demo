@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { SapaInca } from '../../models/SapaInca.type';
+import { SapaInca } from '@app/models';
 
 @Component({
   selector: 'app-sapa-inca-card[sapaInca]',

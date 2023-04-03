@@ -11,7 +11,7 @@ import {
   of,
   startWith,
 } from 'rxjs';
-import { SapaInca } from '../../models/SapaInca.type';
+import { SapaInca } from '@app/models';
 import { SapaIncaService } from '../../services/sapa-inca.service';
 
 @Component({
@@ -19,13 +19,15 @@ import { SapaIncaService } from '../../services/sapa-inca.service';
   standalone: true,
   imports: [CommonModule, SapaIncaCardComponent],
   template: `
-    <ng-container *ngIf="vm$ | async as vm; else incasLoading">
-      <app-sapa-inca-card [sapaInca]="inca" *ngFor="let inca of vm.incas" />
-      <span *ngIf="vm.error">There was an error on loading list</span>
+    <ng-container *ngIf="vm$ | async as vm">
+      <ng-container *ngIf="vm.incas; else incasLoading">
+        <app-sapa-inca-card [sapaInca]="inca" *ngFor="let inca of vm.incas" />
+      </ng-container>
+      <ng-template #incasLoading>
+        <span *ngIf="!vm.error">Loading...</span>
+        <span *ngIf="vm.error">There was an error on loading list</span>
+      </ng-template>
     </ng-container>
-    <ng-template #incasLoading>
-      <span>Loading...</span>
-    </ng-template>
   `,
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
